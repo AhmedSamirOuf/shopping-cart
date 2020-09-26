@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import {addToCart} from "../actions/cartActions";
+import Cart from "./Cart";
 
 class ViewProducts extends Component {
-  handleClick = (id) => {
+  addProductToCart = (id) => {
     debugger;
     this.props.addToCart(id);
     this.forceUpdate();
@@ -12,11 +13,13 @@ class ViewProducts extends Component {
     let products = this.getProducts();
     return (
       <div className="container">
-        <h3 className="center">Products</h3>
         <div className="box">
           {products}
         </div>
-       </div>)
+        <h3 className="center">Your cart</h3>
+        <Cart/>
+       </div>
+    )
   }
   getProducts() {
     return this.props.products.map(product => {
@@ -30,7 +33,7 @@ class ViewProducts extends Component {
           </div>
           <button
             id={`tshirt-${product.id}`}
-            onClick={()=>this.handleClick(product.id)}
+            onClick={()=>this.addProductToCart(product.id)}
             disabled={product.available > 0 ? '' : 'disabled'}>
             {product.available > 0 ? 'Add to cart' : 'Sold Out'}
           </button>
@@ -41,7 +44,8 @@ class ViewProducts extends Component {
 
 const mapStateToProps = (state)=>{
   return {
-    products: state.products
+    products: state.products,
+    purchasedItems: state.purchasedItems
   }
 };
 const mapDispatchToProps= (dispatch)=>{
