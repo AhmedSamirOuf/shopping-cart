@@ -3,7 +3,7 @@ shopping cart using MERN
 # steps
 1-clone the project
 
-2-run the following command to install dependices
+2-run the following command to install dependencies
 ```javascript
 npm install
 ```
