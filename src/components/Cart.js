@@ -1,6 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
+import {removeItem, subtractQuantity} from "../actions/cartActions";
 class Cart extends Component {
+
+  decrease = (id) => {
+    this.props.subtractQuantity(id);
+    this.forceUpdate();
+  };
+  delete = (id) => {
+    this.props.removeItem(id);
+    this.forceUpdate();
+  };
   render() {
     let items=this.getItems();
     return (
@@ -10,6 +20,9 @@ class Cart extends Component {
           <ul className="collection">
             {items}
           </ul>
+          <h2>
+            {`total cost :${this.props.total}$`}
+          </h2>
         </div>
       </div>
     )
@@ -20,12 +33,21 @@ class Cart extends Component {
       (
         this.props.purchasedItems.map(item => {
           return (
-            <div>
-              <h5>{`item name:${item.name}`}</h5>
-              <h5>{`item price :${item.price}$`}</h5>
-              <h5>{`item quantity :${item.quantity}`}</h5>
-            </div>
+            <li className="collection-item avatar" key={item.id}>
+              <div className="item-desc">
+                <span className="title">{item.name}</span>
+                <p>{item.desc}</p>
+                <p><b>Price: {item.price}$</b></p>
+                <p>
+                  <b>Quantity: {item.quantity}</b>
+                </p>
+                <button id={"sub-quantity"} onClick={()=>{this.decrease(item.id)}}>-</button>
+                <button id={"remove-item"} onClick={()=>{this.delete(item.id)}}>Remove</button>
+              </div>
+              <hr/>
+            </li>
           )
+
         })
       ) :
       (
@@ -35,8 +57,15 @@ class Cart extends Component {
 }
 const mapStateToProps = (state)=>{
   return {
-    products:state.products,
+    total:state.total,
     purchasedItems: state.purchasedItems
+
   }
 };
-export default connect(mapStateToProps)(Cart)
+const mapDispatchToProps = (dispatch)=>{
+  return{
+    removeItem: (id)=>{dispatch(removeItem(id))},
+    subtractQuantity: (id)=>{dispatch(subtractQuantity(id))}
+  }
+};
+export default connect(mapStateToProps,mapDispatchToProps)(Cart)

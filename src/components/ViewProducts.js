@@ -5,7 +5,6 @@ import Cart from "./Cart";
 
 class ViewProducts extends Component {
   addProductToCart = (id) => {
-    debugger;
     this.props.addToCart(id);
     this.forceUpdate();
   };
