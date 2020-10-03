@@ -11,18 +11,37 @@ class Cart extends Component {
     this.props.removeItem(id);
     this.forceUpdate();
   };
+  placeOrder = (items) =>{
+    console.log(items);
+    const postData = {
+      userId:1,
+      items,
+      total:this.props.total
+    };
+    fetch('http://localhost:5000/api/place-order', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(postData)
+    }).then(alert(
+      "we have received your order, thank you"
+    ))
+  };
   render() {
     let items=this.getItems();
     return (
-      <div className="container">
-        <div className="cart">
+      <div>
+        <div>
           <h5>You have ordered:</h5>
-          <ul className="collection">
+          <ul>
             {items}
           </ul>
           <h2>
             {`total cost :${this.props.total}$`}
           </h2>
+          <button id={"place-order"} onClick={()=>{this.placeOrder(this.props.purchasedItems)}}>place order</button>
         </div>
       </div>
     )
@@ -33,19 +52,21 @@ class Cart extends Component {
       (
         this.props.purchasedItems.map(item => {
           return (
-            <li className="collection-item avatar" key={item.id}>
-              <div className="item-desc">
-                <span className="title">{item.name}</span>
-                <p>{item.desc}</p>
-                <p><b>Price: {item.price}$</b></p>
-                <p>
-                  <b>Quantity: {item.quantity}</b>
-                </p>
-                <button id={"sub-quantity"} onClick={()=>{this.decrease(item.id)}}>-</button>
-                <button id={"remove-item"} onClick={()=>{this.delete(item.id)}}>Remove</button>
-              </div>
-              <hr/>
-            </li>
+            <div>
+              <li key={item.id}>
+                <div>
+                  <span>{item.name}</span>
+                  <p>{item.desc}</p>
+                  <p><b>Price: {item.price}$</b></p>
+                  <p>
+                    <b>Quantity: {item.quantity}</b>
+                  </p>
+                  <button id={"sub-quantity"} onClick={()=>{this.decrease(item.id)}}>-</button>
+                  <button id={"remove-item"} onClick={()=>{this.delete(item.id)}}>Remove</button>
+                </div>
+                <hr/>
+              </li>
+            </div>
           )
 
         })
